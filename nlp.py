@@ -38,4 +38,14 @@ df['reviewText'] = df['reviewText'].str.replace(r'\d', '', regex=True)
 sw=stopwords.words('english')
 print(sw)
 df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in sw))
+
+
+# RARE WORDS
+# If we want to delete rare words. We can choose and delete it.
+
+tempDf=pd.Series(''.join(df['reviewText']).split()).value_counts()
+drops=tempDf[tempDf<=1]
+print(drops)
+
+df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
 print(df['reviewText'])
