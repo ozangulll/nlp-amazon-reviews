@@ -5,6 +5,7 @@
 # !pip install wordcloud
 from warnings import filterwarnings
 import matplotlib.pyplot as plt
+import nltk
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -22,14 +23,19 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 200)
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 df = pd.read_csv("datasets/amazon_reviews.csv", sep=",")
-print(df.head())
+#print(df.head())
 
 # Normalizing Case Folding
-print(df['reviewText'])
+#print(df['reviewText'])
 df['reviewText'] = df['reviewText'].str.lower()
 
 df['reviewText'] = df['reviewText'].str.replace(r"[^\w\s]", "", regex=True)
 df['reviewText'] = df['reviewText'].str.replace(r'\d', '', regex=True)
 
-
+#STOP WORDS  (LIKE OF THIS THE..... ETC)
+#there is a list which include stop words in NLTK library
+#nltk.download('stopwords')
+sw=stopwords.words('english')
+print(sw)
+df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in sw))
 print(df['reviewText'])
