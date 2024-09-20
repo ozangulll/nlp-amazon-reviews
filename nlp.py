@@ -49,3 +49,11 @@ print(drops)
 
 df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
 print(df['reviewText'])
+
+nltk.download('punkt')
+
+#df["reviewText"].apply(lambda x: TextBlob(x).words).head()
+
+#nltk.download('wordnet')
+df['reviewText'] = df['reviewText'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
+print(df['reviewText'])
