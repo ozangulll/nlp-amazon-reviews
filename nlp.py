@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import nltk
 import numpy as np
 import pandas as pd
-from PIL import Image
+from PIL import Image, ImageEnhance
 from nltk.corpus import stopwords
 from nltk.sentiment import SentimentIntensityAnalyzer
 from sklearn.ensemble import RandomForestClassifier
@@ -63,7 +63,7 @@ tf.sort_values(by=['tf'],ascending=False)
 print(tf)
 #BAR PLOT
 tf[tf["tf"]>500].plot.bar(x="words",y="tf")
-plt.show()
+#plt.show()
 
 #WORD CLOUD
 
@@ -71,4 +71,40 @@ text=" ".join(i for i in df['reviewText'])
 wordCloud=WordCloud().generate(text)
 plt.imshow(wordCloud,interpolation='bilinear')
 plt.axis('off')
-plt.show()
+#plt.show()
+
+wordCloud=WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
+plt.figure()
+plt.imshow(wordCloud,interpolation='bilinear')
+plt.axis('off')
+#plt.show()
+#ŞABLONLARA GÖRE WORDCLOUD OLUŞTURMA
+mask_path = 'template/tr.png'  # kendi dosya yolunuza göre ayarlayın
+img = Image.open(mask_path)
+enhancer = ImageEnhance.Contrast(img)
+enhanced_img = enhancer.enhance(2)
+enhanced_mask = np.array(enhanced_img)
+wc=WordCloud(background_color="white",max_words=1000,mask=enhanced_mask,contour_width=3,contour_color="firebrick")
+wc.generate(text)
+plt.figure(figsize = [10,10])
+plt.imshow(wc,interpolation='bilinear')
+plt.axis('off')
+#plt.show()
+
+#SENTIMENT ANALYSIS
+print(df.head())
+#nltk.download('vader_lexicon')
+sia=SentimentIntensityAnalyzer()
+sia.polarity_scores("The film was awesome")
+print(type(sia.polarity_scores("The film was awesome")))
+df['polarity_scores'] = df['reviewText'].apply(lambda x: sia.polarity_scores(x))
+df['compound'] = df['polarity_scores'].apply(lambda x: x['compound'])
+#overall score u 3 den küçük olup polarity score u 0 dan büyük olanları araştır mesela bununla ilgili bir çalışma yapılabilir
+#çünkü burada aslında bir çatışma var.
+# Şartlara uygun incelemeleri filtrele
+filtered_reviews = df[(df['overall'] < 3) & (df['compound'] > 0)]
+
+# Sonuçları yazdır
+print(filtered_reviews[['reviewText', 'overall', 'compound']])
+
+
