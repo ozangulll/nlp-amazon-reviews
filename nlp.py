@@ -18,6 +18,7 @@ from sklearn.preprocessing import LabelEncoder
 from textblob import Word, TextBlob
 from wordcloud import WordCloud
 
+
 filterwarnings('ignore')
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 200)
@@ -36,24 +37,38 @@ df['reviewText'] = df['reviewText'].str.replace(r'\d', '', regex=True)
 #there is a list which include stop words in NLTK library
 #nltk.download('stopwords')
 sw=stopwords.words('english')
-print(sw)
+#print(sw)
 df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in sw))
-
-
 # RARE WORDS
 # If we want to delete rare words. We can choose and delete it.
-
-tempDf=pd.Series(''.join(df['reviewText']).split()).value_counts()
+tempDf=pd.Series(' '.join(df['reviewText']).split()).value_counts()
 drops=tempDf[tempDf<=1]
-print(drops)
+#print(drops)
 
-df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
-print(df['reviewText'])
+df['reviewText']=df['reviewText'].apply(lambda x: " ".join(x for x in x.split() if x not in drops))
+#print(df['reviewText'])
 
-nltk.download('punkt')
+#nltk.download('punkt')
 
-#df["reviewText"].apply(lambda x: TextBlob(x).words).head()
+df["reviewText"].apply(lambda x: TextBlob(x).words).head()
 
 #nltk.download('wordnet')
 df['reviewText'] = df['reviewText'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
-print(df['reviewText'])
+#print(df['reviewText'])
+
+#FREQUENCY CALCULATION
+tf=df["reviewText"].apply(lambda x:pd.value_counts(x.split(" "))).sum(axis=0).reset_index()
+tf.columns=["words","tf"]
+tf.sort_values(by=['tf'],ascending=False)
+print(tf)
+#BAR PLOT
+tf[tf["tf"]>500].plot.bar(x="words",y="tf")
+plt.show()
+
+#WORD CLOUD
+
+text=" ".join(i for i in df['reviewText'])
+wordCloud=WordCloud().generate(text)
+plt.imshow(wordCloud,interpolation='bilinear')
+plt.axis('off')
+plt.show()
