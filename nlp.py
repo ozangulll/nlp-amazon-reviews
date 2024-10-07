@@ -57,8 +57,19 @@ df["reviewText"] = df["reviewText"].apply(lambda x: " ".join(x for x in str(x).s
 df["reviewText"].head()
 ##RareWords
 temp_df=pd.Series(' '.join(df['reviewText']).split()).value_counts()
-print(temp_df)
+#print(temp_df)
 drops=temp_df[temp_df <=1]
 print(drops)
 df["reviewText"]=df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
 df["reviewText"]
+
+##Tokenization
+
+#nltk.download("punkt") Package punkt is already up-to-date!
+
+df["reviewText"].apply(lambda x:TextBlob(x).words).head()
+
+#Lemmataization
+#nltk.download('wordnet')  Package wordnet is already up-to-date!
+df['reviewText']=df['reviewText'].apply(lambda x:" ".join([Word(word).lemmatize() for word in x.split()]))
+df["reviewText"].head()
