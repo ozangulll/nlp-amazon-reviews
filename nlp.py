@@ -46,3 +46,19 @@ df["reviewText"].head()
 df["reviewText"] = df["reviewText"].str.replace(r'\d', '', regex=True)
 df["reviewText"].tail()
 
+##StopWords  (NLTK Library include stop words)
+#nltk.download('stopwords')  // Package stopwords is already up-to-date!
+
+sw = stopwords.words('english')
+print(sw)
+print(type(sw))
+#we should split in terms of blank and compare with stopwords
+df["reviewText"] = df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in sw))
+df["reviewText"].head()
+##RareWords
+temp_df=pd.Series(' '.join(df['reviewText']).split()).value_counts()
+print(temp_df)
+drops=temp_df[temp_df <=1]
+print(drops)
+df["reviewText"]=df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
+df["reviewText"]
