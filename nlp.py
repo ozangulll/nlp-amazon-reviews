@@ -56,20 +56,37 @@ print(type(sw))
 df["reviewText"] = df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in sw))
 df["reviewText"].head()
 ##RareWords
-temp_df=pd.Series(' '.join(df['reviewText']).split()).value_counts()
+temp_df = pd.Series(' '.join(df['reviewText']).split()).value_counts()
 #print(temp_df)
-drops=temp_df[temp_df <=1]
+drops = temp_df[temp_df <= 1]
 print(drops)
-df["reviewText"]=df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
+df["reviewText"] = df["reviewText"].apply(lambda x: " ".join(x for x in str(x).split() if x not in drops))
 df["reviewText"]
 
 ##Tokenization
 
 #nltk.download("punkt") Package punkt is already up-to-date!
 
-df["reviewText"].apply(lambda x:TextBlob(x).words).head()
+df["reviewText"].apply(lambda x: TextBlob(x).words).head()
 
 #Lemmataization
 #nltk.download('wordnet')  Package wordnet is already up-to-date!
-df['reviewText']=df['reviewText'].apply(lambda x:" ".join([Word(word).lemmatize() for word in x.split()]))
+df['reviewText'] = df['reviewText'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
 df["reviewText"].head()
+
+####################################
+#Text Visualization
+####################################
+
+#To visualize the text, calculate the frequency of them (words)
+
+tf = df["reviewText"].apply(lambda x: pd.value_counts(x.split(" "))).sum(axis=0).reset_index()
+tf.columns = ["words", "tf"]
+tf.sort_values("tf", ascending=False)
+print(tf)
+
+##Bar Plot
+#greater than 500
+tf[tf["tf"] > 500].plot.bar(x="words", y="tf")
+plt.show()
+
