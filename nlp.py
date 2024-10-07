@@ -42,3 +42,7 @@ df["reviewText"] = df["reviewText"].str.lower()
 df["reviewText"].head()
 df["reviewText"] = df["reviewText"].str.replace(r'[^\w\s]', '', regex=True)
 df["reviewText"].head()
+##Numbers
+df["reviewText"] = df["reviewText"].str.replace(r'\d', '', regex=True)
+df["reviewText"].tail()
+
