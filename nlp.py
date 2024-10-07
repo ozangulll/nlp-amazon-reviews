@@ -81,12 +81,36 @@ df["reviewText"].head()
 #To visualize the text, calculate the frequency of them (words)
 
 tf = df["reviewText"].apply(lambda x: pd.value_counts(x.split(" "))).sum(axis=0).reset_index()
-tf.columns = ["words", "tf"]
-tf.sort_values("tf", ascending=False)
-print(tf)
 
+tf.columns = ["words", "tf"]
+
+tf.sort_values("tf", ascending=False)
 ##Bar Plot
 #greater than 500
 tf[tf["tf"] > 500].plot.bar(x="words", y="tf")
 plt.show()
+
+##Word Cloud
+text = " ".join(i for i in df.reviewText)
+
+wordcloud2 = WordCloud().generate(text)
+plt.imshow(wordcloud2, interpolation="bilinear")
+plt.axis("off")
+# plt.show()
+
+tr_mask = np.array(Image.open("template/tr.png"))
+
+wc = WordCloud(background_color="white",
+               max_words=1000,
+               mask=tr_mask,
+               contour_width=3,
+               contour_color="firebrick")
+
+wc.generate(text)
+plt.figure(figsize=[10, 10])
+plt.imshow(wc, interpolation="bilinear")
+plt.axis("off")
+#plt.show()
+df["reviewText"].head()
+
 
