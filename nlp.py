@@ -18,12 +18,11 @@ from sklearn.preprocessing import LabelEncoder
 from textblob import Word, TextBlob
 from wordcloud import WordCloud
 
-
 filterwarnings('ignore')
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 200)
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
-df = pd.read_csv("datasets/amazon_reviews.csv", sep=",")
+
 #print(df.head())
 
 ##Text Preprocessing
@@ -32,4 +31,14 @@ df = pd.read_csv("datasets/amazon_reviews.csv", sep=",")
 ##Feature Engineering
 ##Sentiment Modeling
 
+#->Text Preprocessing
+df = pd.read_csv("datasets/amazon_reviews.csv", sep=",")
+df.head()
 
+##Normalizing Case Folding
+df["reviewText"].head()
+df["reviewText"] = df["reviewText"].str.lower()
+##Punctuations
+df["reviewText"].head()
+df["reviewText"] = df["reviewText"].str.replace(r'[^\w\s]', '', regex=True)
+df["reviewText"].head()
