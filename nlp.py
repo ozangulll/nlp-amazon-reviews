@@ -26,3 +26,10 @@ pd.set_option('display.float_format', lambda x: '%.2f' % x)
 df = pd.read_csv("datasets/amazon_reviews.csv", sep=",")
 #print(df.head())
 
+##Text Preprocessing
+##Text Visualization
+##Sentiment Analysis
+##Feature Engineering
+##Sentiment Modeling
+
+
