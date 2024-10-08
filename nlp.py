@@ -88,7 +88,7 @@ tf.sort_values("tf", ascending=False)
 ##Bar Plot
 #greater than 500
 tf[tf["tf"] > 500].plot.bar(x="words", y="tf")
-plt.show()
+#plt.show()
 
 ##Word Cloud
 text = " ".join(i for i in df.reviewText)
@@ -112,5 +112,16 @@ plt.imshow(wc, interpolation="bilinear")
 plt.axis("off")
 #plt.show()
 df["reviewText"].head()
+
+
+#SENTIMENT ANALYSIS
+#nltk.download('vader_lexicon')
+sia=SentimentIntensityAnalyzer()
+# sia.polarity_scores("The film was awesome")  #TRY FOR SIA
+
+df["reviewText"][0:10].apply(lambda x: sia.polarity_scores(x))
+df["reviewText"][0:10].apply(lambda x: sia.polarity_scores(x)["compound"])
+df["polarity_score"]=df["reviewText"].apply(lambda x: sia.polarity_scores(x)["compound"])
+print(df["polarity_score"].head())
 
 
